@@ -1,30 +1,54 @@
-const contentArea = document.getElementById("content-area");
-
-const player = (playerName) => {
-
-    return{playerName};
-
-};
-
 const gameboard = (() => {
+
+    const contentArea = document.getElementById("content-area");
 
     const board = [[null,null,null],[null,null,null],[null,null,null]];
 
-    function updateGameboard(row, index, player){
+    const tileFactory = (row,index,element) => {
 
-        if (player = "playerOne"){
-            board[row[index]] = "X";
-        }
-        else{
-            board[row[index]] = "O";
-        }
+        this.row = row;
+        this.index = index;
+        this.element = element;
 
+        return(element);
+    }
+    
+    const drawGameboard = () => {
+        const boardContainer = document.createElement('div');
+        boardContainer.id = "gameboard";
+    
+        for (x=0; x<board.length; x++){
+    
+            for (y=0; y<board.length; y++){
+                const boardSquare = document.createElement('div');
+                boardSquare.addEventListener("click", () => updateGameboard(this.row,this.index));
+                const tile = tileFactory(x,y,boardSquare);
+                board[x][y] = tile;
+                boardContainer.appendChild(tile);
+    
+            }
+    
+        }
+    
+        contentArea.appendChild(boardContainer);
+    }
+    
+    function updateGameboard(row, index){
+        
+            board[row][index].textContent = "X";
+    
     }
 
+    return{drawGameboard, updateGameboard};
+    
 
 })();
 
-const tiles = (row, index, marker, element) => {
+gameboard.drawGameboard();
+
+
+
+/*const tiles = (row, index, element) => {
 
     return{
         row,
@@ -32,56 +56,14 @@ const tiles = (row, index, marker, element) => {
         element,
         marker        
         };
-};
-
-const updateDisplay =(() => {
-
-    function drawGameboard(board){
-
-        const boardContainer = document.createElement('div');
-        boardContainer.id = "gameboard";
-
-        for (x=0; x<board.length; x++){
-
-            for (y=0; y<board.length; y++){
-
-                const boardSquare = document.createElement('div');
-                boardSquare.textContent = board[x[y]];
-                boardContainer.appendChild(boardSquare);
-
-            }
-
-        }
-
-    }
-    const gameBoard = document.createElement("div");
-    gameBoard.id = "gameboard";
-
-
-    
-
-
-})();
-
-
-
-
-
-
-
-
-
-
-
-
-
+};*/
 
 
 
 /*pubsub module
 const pubsub = (() => {
 
-    subscriptions:{
+    subscriptio\]=s:{
 
     },
     subscribe: function()
