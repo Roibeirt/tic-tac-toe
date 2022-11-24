@@ -1,89 +1,40 @@
-const contentArea = document.getElementById("content-area");
-
-const player = (playerName) => {
-
-    return{playerName};
-
-};
 
 const gameboard = (() => {
 
+    const contentArea = document.getElementById("content-area");
+
     const board = [[null,null,null],[null,null,null],[null,null,null]];
 
-    function updateGameboard(row, index, player){
-
-        if (player = "playerOne"){
-            board[row[index]] = "X";
-        }
-        else{
-            board[row[index]] = "O";
-        }
-
+    const tileFactory = (row,index,boardSquare) => {
+        
+        return{row,index,boardSquare};
     }
-
-
-})();
-
-const tiles = (row, index, marker, element) => {
-
-    return{
-        row,
-        index,
-        element,
-        marker        
-        };
-};
-
-const updateDisplay =(() => {
-
-    function drawGameboard(board){
-
+    
+    const drawGameboard = () => {
         const boardContainer = document.createElement('div');
         boardContainer.id = "gameboard";
-
-        for (x=0; x<board.length; x++){
-
-            for (y=0; y<board.length; y++){
-
-                const boardSquare = document.createElement('div');
-                boardSquare.textContent = board[x[y]];
-                boardContainer.appendChild(boardSquare);
-
-            }
-
-        }
-
-    }
-    const gameBoard = document.createElement("div");
-    gameBoard.id = "gameboard";
-
-
     
+        for (x=0; x<board.length; x++){
+    
+            for (y=0; y<board.length; y++){
+                const boardSquare = document.createElement('div');
+                const tile = tileFactory(x,y,boardSquare);
+                tile.boardSquare.addEventListener("click", () => updateGameboard(tile.row,tile.index));
+                board[x][y] = tile;
+                boardContainer.appendChild(tile.boardSquare);
+            }
+        }
+    
+        contentArea.appendChild(boardContainer);
+    }
+    
+    function updateGameboard(row, index){
+        
+            board[row][index].boardSquare.textContent = "X";
+    
+    }
 
-
+    return{drawGameboard, contentArea};
+    
 })();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*pubsub module
-const pubsub = (() => {
-
-    subscriptions:{
-
-    },
-    subscribe: function()
-
-}) */
