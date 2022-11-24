@@ -1,16 +1,13 @@
+
 const gameboard = (() => {
 
     const contentArea = document.getElementById("content-area");
 
     const board = [[null,null,null],[null,null,null],[null,null,null]];
 
-    const tileFactory = (row,index,element) => {
-
-        this.row = row;
-        this.index = index;
-        this.element = element;
-
-        return(element);
+    const tileFactory = (row,index,boardSquare) => {
+        
+        return{row,index,boardSquare};
     }
     
     const drawGameboard = () => {
@@ -21,13 +18,11 @@ const gameboard = (() => {
     
             for (y=0; y<board.length; y++){
                 const boardSquare = document.createElement('div');
-                boardSquare.addEventListener("click", () => updateGameboard(this.row,this.index));
                 const tile = tileFactory(x,y,boardSquare);
+                tile.boardSquare.addEventListener("click", () => updateGameboard(tile.row,tile.index));
                 board[x][y] = tile;
-                boardContainer.appendChild(tile);
-    
+                boardContainer.appendChild(tile.boardSquare);
             }
-    
         }
     
         contentArea.appendChild(boardContainer);
@@ -35,37 +30,11 @@ const gameboard = (() => {
     
     function updateGameboard(row, index){
         
-            board[row][index].textContent = "X";
+            board[row][index].boardSquare.textContent = "X";
     
     }
 
-    return{drawGameboard, updateGameboard};
+    return{drawGameboard, contentArea};
     
-
 })();
 
-gameboard.drawGameboard();
-
-
-
-/*const tiles = (row, index, element) => {
-
-    return{
-        row,
-        index,
-        element,
-        marker        
-        };
-};*/
-
-
-
-/*pubsub module
-const pubsub = (() => {
-
-    subscriptio\]=s:{
-
-    },
-    subscribe: function()
-
-}) */
