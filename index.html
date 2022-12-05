@@ -14,8 +14,20 @@
     </div>
     <div id="content-area">
         <!-- <form>
-            <label for="player-name">Player Name: </label>
-            <input type="text" name="player-name" id="player-name">
+            <div id="labels-and-inputs">
+            <div class="labels">
+                <label for="player-name">Player Name: </label>
+                <label for="ai-menu">AI Difficulty: </label>
+            </div>            
+            <div class="inputs">
+                <input type="text" name="player-name" id="player-name">
+                <select name="ai-menu" id="ai-menu">
+                    <option value ="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option> 
+                </select>
+            </div>
+            </div>
             <div class="mark-select">
                 <div class="mark-select-label">Select Marker</div>
                 <div class="mark-select-buttons">

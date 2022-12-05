@@ -9,12 +9,39 @@ const ticTacToe = (() => {
 
         let gameType = "";
         let currentPlayer = 1;
+        let aiPlayer = 0;
+        let aiDifficulty = "easy"
+
+        const gameStart = (singlePlayer, aiDifficulty) => {
+
+            if (singlePlayer == true){
+                aiDifficulty = aiDifficulty;
+                if (Players.playerList[0].playerNumber == 2){
+                    aiPlayer = 1;
+                }
+                else{
+                    aiPlayer = 2;
+                }
+                displayController.drawGameboard(aiPlayer);
+            }
+        }
+
+        const aiMove = () => {
+            let playableTiles = gameBoard.board.flat().filter(x => x.boardSquare.textContent == "");
+            let move = Math.floor(Math.random() * playableTiles.length);
+            gameBoard.updateGameboard(playableTiles[move].row, playableTiles[move].index, currentPlayer);
+
+        }
 
         const gameStep = (row, index) => {
-            //update board
-
-            gameBoard.updateGameboard(row, index, currentPlayer)
-
+            
+            if (currentPlayer == aiPlayer){
+                aiMove();
+            }
+            else{
+                gameBoard.updateGameboard(row, index, currentPlayer)
+            }
+           
             // check for win/draw
             if (checkWin() === true){
                 winner(currentPlayer);
@@ -24,6 +51,10 @@ const ticTacToe = (() => {
             }
             else{
                 changePlayer();
+            }
+
+            if(currentPlayer == aiPlayer){
+                gameStep();
             }
             
         }
@@ -58,9 +89,10 @@ const ticTacToe = (() => {
                 return(true);
             }
         }
-
+        // check for a draw
         const checkDraw = () => {
                 
+            // flatten the board and make sure every tile has a mark
             let drawCheck = gameBoard.board.flat();
 
             if (drawCheck.every((x) => x.boardSquare.textContent != "")){
@@ -87,7 +119,7 @@ const ticTacToe = (() => {
             alert("Draw!");
         }
 
-        return{gameStep}
+        return{gameStep, aiMove, gameStart}
 
     })();
 
@@ -97,29 +129,20 @@ const ticTacToe = (() => {
 
         const playerList = [];
 
-        const createPlayerOne = (playerName) => {
+        const createPlayer = (playerName, playerNumber) => {
 
-            const playerOne = playerFactory(playerName, 1);
+            const playerOne = playerFactory(playerName, playerNumber);
             playerList.push(playerOne);
-            for(const player of playerList){
-                console.log(player);
-            }
-            alert("didit!");
-
+            
         };
 
-        const createPlayerTwo = (playerName) =>{
+        const playerFactory = (playerName, playerNumber) => {
 
-
-        };
-
-        const playerFactory = (playerName, number) => {
-
-            return{playerName, number};
+            return{playerName, playerNumber};
     
         };
 
-        return{createPlayerOne, playerList}
+        return{createPlayer, playerList}
 
     })();
 
@@ -147,6 +170,15 @@ const ticTacToe = (() => {
 
     const displayController = (() => {
 
+        /* Win Screen */
+
+        const drawWinScreen = (winner) => {
+
+            
+
+
+        }
+
         /* Clear Screen */
 
         const clearScreen = () => {
@@ -157,7 +189,7 @@ const ticTacToe = (() => {
 
         /* Gameboard Screen */
 
-        const drawGameboard = () => {
+        const drawGameboard = (aiPlayer) => {
         
             clearScreen();
     
@@ -176,6 +208,9 @@ const ticTacToe = (() => {
             }
         
             contentArea.appendChild(boardContainer);
+            if (aiPlayer == 1){
+                game.gameStep();
+            }
         }
 
         /* Title Screen */
@@ -219,15 +254,52 @@ const ticTacToe = (() => {
         clearScreen();
         // create screen elements
         const containerForm = document.createElement('form');
+        const labelsAndInputs = document.createElement('div')
+        labelsAndInputs.id ="labels-and-inputs";
+        const inputs = document.createElement('div')
+        inputs.classList = "inputs";
+        const labels = document.createElement('div')
+        labels.classList = "labels"
+
 
         const nameLabel = document.createElement('label');
         nameLabel.htmlFor = "player-name";
         nameLabel.textContent = "Player Name: "
-
         const nameInput = document.createElement('input');
         nameInput.type = "text";
         nameInput.name = "player-name";
         nameInput.id = "player-name";
+
+        const difficultyLabel = document.createElement("label");
+        difficultyLabel.htmlFor = "ai-menu";
+        difficultyLabel.textContent = "AI Difficulty: "
+        
+        const aiMenu = document.createElement("select");
+        aiMenu.name = "ai-menu";
+        aiMenu.id = "ai-menu"; 
+        
+        const easy = document.createElement("option")
+        easy.value = "easy";
+        easy.textContent = "Easy"
+        const medium = document.createElement("option")
+        medium.value = "medium";
+        medium.textContent = "Medium"
+        const hard = document.createElement("option")
+        hard.value = "hard";
+        hard.textContent = "Hard"
+
+        aiMenu.appendChild(easy);
+        aiMenu.appendChild(medium);
+        aiMenu.appendChild(hard);
+
+        inputs.appendChild(nameInput);
+        inputs.appendChild(aiMenu);
+
+        labels.appendChild(nameLabel);
+        labels.appendChild(difficultyLabel);
+
+        labelsAndInputs.appendChild(labels);
+        labelsAndInputs.appendChild(inputs);
 
         const markSelectDiv = document.createElement("div");
         markSelectDiv.classList = "mark-select";
@@ -246,42 +318,48 @@ const ticTacToe = (() => {
         xButton.addEventListener('click', (e) =>{
             // prevent clicking the button from refreshing the page
             e.preventDefault();
-            createSinglePlayer("X")
-        } );
-        oButton.addEventListener('click', (e) =>{
-            // prevent clicking the button from refreshing the page
-            e.preventDefault();
-            createSinglePlayer("O")
-        } );
-
-        function createSinglePlayer(marker) {
             if (nameInput.value.length < 1){
                 alert("Please enter your name");
                 return;
             }
-            else{
+            SinglePlayer(1)
+        } );
+        oButton.addEventListener('click', (e) =>{
+            // prevent clicking the button from refreshing the page
+            e.preventDefault();
+            if (nameInput.value.length < 1){
+                alert("Please enter your name");
+                return;
+            }
+            SinglePlayer(2)
+        } );
+
+        function SinglePlayer(playerNumber) {
+
                 // create player
-                Players.createPlayerOne(nameInput.value);
+                Players.createPlayer(nameInput.value, playerNumber);
+                // start the game
+                game.gameStart(true, aiMenu.value);
                 // disable buttons so additional players cant be created during animation
                 xButton.disabled = true;
                 oButton.disabled = true;
                 // once the animation ends, draw the gameboard
-                containerForm.addEventListener('animationend', () => drawGameboard('singleplayer', marker));
+                containerForm.addEventListener('animationend', () => game.gameStep());
                 // animate the form moving off screen
                 containerForm.classList = 'exit-down';
-            }
+                
+            
 
         }
         // append elements to correct containers
         
-        markSelectButtonsDiv.appendChild(oButton);
         markSelectButtonsDiv.appendChild(xButton);
-        markSelectDiv.appendChild(markSelectButtonsDiv);
+        markSelectButtonsDiv.appendChild(oButton);
         markSelectDiv.appendChild(markSelectLabel);
-
-        containerForm.appendChild(nameLabel);
-        containerForm.appendChild(nameInput);
-
+        markSelectDiv.appendChild(markSelectButtonsDiv);
+        
+        
+        containerForm.appendChild(labelsAndInputs);
         containerForm.appendChild(markSelectDiv);
         
         contentArea.appendChild(containerForm);
@@ -296,7 +374,11 @@ const ticTacToe = (() => {
         displayController.drawTitleScreen();
     }
 
-    return{startGame};
+    function testAI(){
+        game.aiMove();
+    }
+
+    return{startGame, testAI};
 
 })();
 
