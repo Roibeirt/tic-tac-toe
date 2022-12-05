@@ -1,6 +1,35 @@
+@keyframes exit-left {
+    from {
+        transform:translateX(0%);
+    }
+    to{
+        transform: translateX(-150vw);
+    }
+}
+
+@keyframes exit-right {
+    from {
+        transform:translateX(0%);
+    }
+    to{
+        transform: translateX(150vw);
+    }
+}
+
+@keyframes exit-down {
+    from {
+        transform:translateY(0%);
+    }
+    to{
+        transform: translateY(150vw);
+    }
+}
+
 *{
     margin:0;
     padding:0;
+    font-family: 'Finger Paint', cursive;
+    font-size: 18px;
 }
 
 body{
@@ -18,11 +47,12 @@ body{
 
 #content-area{
     height:100%;
-    background-color: blue;
+    background-color: grey;
 
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 
 }
 
@@ -77,4 +107,48 @@ body{
     display: flex;
     width: 25%;
     justify-content: space-between;
+}
+
+.mark-select{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.mark-select-buttons{
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+.mark-select-buttons > button{
+    font-size: 100px;
+    height: 150px;
+    width: 150px;
+    background-color: transparent;
+}
+
+.exit-left{
+    animation-name: exit-left;
+    animation-duration: 1.5s;
+    animation-timing-function: ease-in;
+    animation-delay: 0s;
+    animation-fill-mode: forwards;
+}
+
+.exit-right{
+    animation-name: exit-right;
+    animation-duration: 1.5s;
+    animation-timing-function: ease-in;
+    animation-delay: 0s;
+    animation-fill-mode: forwards;
+}
+
+.exit-down{
+    animation-name: exit-down;
+    animation-duration: 1.5s;
+    animation-timing-function: ease-in;
+    animation-delay: 0s;
+    animation-fill-mode: forwards;
 }
